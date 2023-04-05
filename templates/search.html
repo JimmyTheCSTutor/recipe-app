@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Recipe Search</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<label for="search">Search Recipes:</label>
+	<input type="text" id="search" name="search" placeholder="Enter a keyword...">
+	<button type="button" id="submit">Submit</button>
+
+	<div id="results"></div>
+</body>
+
+<script>
+    $(document).ready(function(){
+        $('#submit').click(function(){
+            var keyword = $('#search').val();
+            $.getJSON('/api/search', {'keyword': keyword}, function(data){
+                var html = '';
+                if (data) {
+                    html += '<h3>Results for "' + keyword + '"</h3>';
+                    html += '<ul>';
+                    $.each(data, function(index, recipe){
+                        html += `<li><a href="recipes/${recipe.id}">${recipe.name}</a></li>`;
+                    });
+                    html += '</ul>';
+                } else {
+                    html += '<p>No results found for "' + keyword + '"</p>';
+                }
+                $('#results').html(html);
+            });
+        });
+    });
+</script>
+
+</html>
